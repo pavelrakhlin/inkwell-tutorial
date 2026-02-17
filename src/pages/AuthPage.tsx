@@ -1,30 +1,19 @@
 import { useState } from "react";
-import { SignIn, SignUp } from "@clerk/clerk-react";
 import { motion } from "framer-motion";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import Button from "../components/ui/Button";
+import Input from "../components/ui/Input";
+
+// TODO: Replace with real Clerk <SignIn /> and <SignUp /> when Clerk is configured.
+// import { SignIn, SignUp } from "@clerk/clerk-react";
 
 export default function AuthPage() {
   const [mode, setMode] = useState<"sign-in" | "sign-up">("sign-in");
+  const navigate = useNavigate();
 
-  const clerkAppearance = {
-    elements: {
-      rootBox: "mx-auto",
-      card: "shadow-soft-lg border border-warm-100 rounded-2xl",
-      headerTitle: "font-serif text-warm-900",
-      headerSubtitle: "text-warm-500",
-      formButtonPrimary:
-        "bg-warm-800 hover:bg-warm-900 text-sm font-sans rounded-lg",
-      formFieldInput:
-        "border-warm-200 rounded-lg focus:ring-accent focus:border-accent font-sans",
-      formFieldLabel: "text-warm-600 font-sans text-sm",
-      footerActionLink: "text-accent hover:text-accent-dark font-sans",
-      identityPreviewText: "font-sans text-warm-600",
-      identityPreviewEditButton: "text-accent",
-      dividerLine: "bg-warm-200",
-      dividerText: "text-warm-400 font-sans",
-      socialButtonsBlockButton:
-        "border-warm-200 text-warm-700 font-sans rounded-lg hover:bg-warm-50",
-    },
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    navigate("/dashboard");
   };
 
   return (
@@ -59,7 +48,7 @@ export default function AuthPage() {
 
       {/* Auth Content */}
       <div className="flex-1 flex items-center justify-center px-6 py-12">
-        <div className="w-full max-w-md">
+        <div className="w-full max-w-sm">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -81,21 +70,41 @@ export default function AuthPage() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.1, ease: "easeOut" }}
           >
-            {mode === "sign-in" ? (
-              <SignIn
-                appearance={clerkAppearance}
-                routing="hash"
-                afterSignInUrl="/dashboard"
-                signUpUrl="#sign-up"
-              />
-            ) : (
-              <SignUp
-                appearance={clerkAppearance}
-                routing="hash"
-                afterSignUpUrl="/dashboard"
-                signInUrl="#sign-in"
-              />
-            )}
+            {/* Placeholder form — will be replaced by Clerk SignIn/SignUp */}
+            <form
+              onSubmit={handleSubmit}
+              className="bg-white rounded-2xl shadow-soft-lg border border-warm-100 p-8 space-y-4"
+            >
+              <div className="space-y-1.5">
+                <label className="block text-sm font-sans text-warm-600">
+                  Email
+                </label>
+                <Input type="email" placeholder="you@example.com" />
+              </div>
+              <div className="space-y-1.5">
+                <label className="block text-sm font-sans text-warm-600">
+                  Password
+                </label>
+                <Input type="password" placeholder="Enter your password" />
+              </div>
+              {mode === "sign-up" && (
+                <div className="space-y-1.5">
+                  <label className="block text-sm font-sans text-warm-600">
+                    Confirm Password
+                  </label>
+                  <Input
+                    type="password"
+                    placeholder="Confirm your password"
+                  />
+                </div>
+              )}
+              <Button type="submit" className="w-full mt-2">
+                {mode === "sign-in" ? "Sign In" : "Create Account"}
+              </Button>
+              <p className="text-center text-xs text-warm-400 mt-3">
+                Auth placeholder — Clerk will be wired in later.
+              </p>
+            </form>
           </motion.div>
 
           <motion.div

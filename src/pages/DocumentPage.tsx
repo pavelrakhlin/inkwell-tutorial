@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { useParams, Navigate } from "react-router-dom";
 import { useQuery } from "convex/react";
-import { Authenticated, Unauthenticated, AuthLoading } from "convex/react";
 import { api } from "../../convex/_generated/api";
 import { Id } from "../../convex/_generated/dataModel";
 import { motion } from "framer-motion";
@@ -10,7 +9,10 @@ import TiptapEditor from "../components/editor/Editor";
 import KnowledgeSidebar from "../components/editor/KnowledgeSidebar";
 import AIChatSidebar from "../components/editor/AIChatSidebar";
 
-function DocumentContent() {
+// TODO: When Clerk is configured, restore auth guards:
+// import { Authenticated, Unauthenticated, AuthLoading } from "convex/react";
+
+export default function DocumentPage() {
   const { id } = useParams<{ id: string }>();
   const documentId = id as Id<"documents">;
   const document = useQuery(api.documents.get, { id: documentId });
@@ -70,26 +72,5 @@ function DocumentContent() {
         />
       </div>
     </motion.div>
-  );
-}
-
-export default function DocumentPage() {
-  return (
-    <>
-      <AuthLoading>
-        <div className="min-h-screen bg-warm-white flex items-center justify-center">
-          <div className="text-center">
-            <div className="w-8 h-8 border-2 border-warm-300 border-t-accent rounded-full animate-spin mx-auto mb-3" />
-            <p className="text-sm text-warm-400 font-sans">Loading...</p>
-          </div>
-        </div>
-      </AuthLoading>
-      <Unauthenticated>
-        <Navigate to="/auth" replace />
-      </Unauthenticated>
-      <Authenticated>
-        <DocumentContent />
-      </Authenticated>
-    </>
   );
 }
